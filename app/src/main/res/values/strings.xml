@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">InfoApp</string>
+    <string name="listEstudiantes">Lista Estudiantes</string>
+    <string name="contentDesc">Imagen</string>
+    <string name="nombreEstudiante">Estudiante</string>
+    <string name="configtitulo">Configuración</string>
+    <string name="detalleEstudiante">Detalle Estudiante</string>
+    <string name="nombreEst">Nombre</string>
+    <string name="ciudadNacimiento">Ciudad Nacimiento</string>
+    <string name="matriculaEstudiante">Matricula</string>
+    <string name="exprCreativa">Expresión creativa</string>
+    <string name="usuarios"> Seleccionar Usuarios</string>
+    <string name="temas">Temas Personalizados</string>
+    <string name="select">Seleccionar</string>
+    <string name="temasDefault">Temas por defecto</string>
+    <!-- Temas customs names-->
+    <string name="temaCustom1">Light Green</string>
+    <string name="temaCustom2">Pink Fusion</string>
+    <string name="temaCustom3">Deep puple</string>
+    <!-- Temas default-->
+    <string name="temaDark">Dark</string>
+    <string name="temaLight">Light</string>
+    <string name="textAceptar">Aceptar</string>
+    <string name="textCancelar">Cancelar</string>
 </resources>
