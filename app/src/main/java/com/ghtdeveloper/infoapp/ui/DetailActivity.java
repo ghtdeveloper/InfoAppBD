@@ -28,9 +28,7 @@ public class DetailActivity extends AppCompatActivity {
         asignarTema();
         //**********************************************************************
         setContentView(R.layout.activity_detail);
-        //setTheme(R.style.ThemeDeepPuple);
-
-       // String tema = sharedPreferences.getString("tema","No asignado");
+        //Toolbar
         Objects.requireNonNull(getSupportActionBar()).setTitle("Detalle Estudiante");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //Cast a la vistas del layout
@@ -42,11 +40,9 @@ public class DetailActivity extends AppCompatActivity {
         txtmatricula.setEnabled(false);
         EditText txtDescripcion = findViewById(R.id.txtDescripcion);
         txtDescripcion.setEnabled(false);
-
         //Imagen
         ImageView imageView = findViewById(R.id.imgProfileUser);
-
-        //Se recibe el intent
+        //Se recibe el intent con las informaciones de los estudiantes
         Intent intent = getIntent();
         //Nombre Usuario
         String nombreUsuario = intent.getStringExtra("nombreEstudiante");
@@ -75,9 +71,6 @@ public class DetailActivity extends AppCompatActivity {
             imageView.setImageResource(R.drawable.jesus_img);
 
         }
-
-        /*Toast.makeText(this,"Usuario"+ usuarioEdison + "Tema: "+ temaLighGreen,
-                Toast.LENGTH_SHORT).show();*/
 
     }//Fin del metodo onCreate
 
@@ -129,8 +122,11 @@ public class DetailActivity extends AppCompatActivity {
             setTheme(R.style.Theme_AppCompat_DayNight); //Ligh
         }
 
-
-
+        //Si el tema no esta asignado se coloca uno por defecto
+       if(tema.equals("no asignado"))
+        {
+            setTheme(R.style.ThemeDefault);
+        }
 
     }//Fin de la funcion asignar tema
 

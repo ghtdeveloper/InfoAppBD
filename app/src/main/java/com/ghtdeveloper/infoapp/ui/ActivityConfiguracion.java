@@ -87,6 +87,7 @@ public class ActivityConfiguracion extends AppCompatActivity
                     temas = "light";
                 }
 
+
                 editor = sharedPreferences.edit();
                 editor.putString("temaSeleccionado", temas);
                 editor.apply();
@@ -167,6 +168,8 @@ public class ActivityConfiguracion extends AppCompatActivity
             {
                 temas ="DeepPuple";
             }
+
+
 
             editor = sharedPreferences.edit();
             editor.putString("temaSeleccionado", temas);
