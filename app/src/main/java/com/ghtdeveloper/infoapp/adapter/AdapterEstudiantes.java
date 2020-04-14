@@ -1,5 +1,6 @@
 package com.ghtdeveloper.infoapp.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,9 +8,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ghtdeveloper.infoapp.R;
-import com.ghtdeveloper.infoapp.modelo.Estudiante;
 import com.ghtdeveloper.infoapp.ui.ViewHolderEstudiantes;
-import java.util.List;
+
+import java.util.ArrayList;
 
 
 /**
@@ -21,11 +22,11 @@ public class AdapterEstudiantes extends RecyclerView.Adapter<ViewHolderEstudiant
 {
 
     //ListaItems
-    private List<Estudiante> items;
+    private ArrayList<String> items;
     //Variables
-    public static int positionSend;
+    private static int positionSend;
+    public static String nombreSend;
     //Objetos
-    private Context context;
     //Interface OnItemClickExplorar
     private onItemClickDetalles onItemClick;
 
@@ -37,7 +38,7 @@ public class AdapterEstudiantes extends RecyclerView.Adapter<ViewHolderEstudiant
 
 
     //Constructor para ser utilizado en el Recycler
-   public AdapterEstudiantes(List<Estudiante> items)
+   public AdapterEstudiantes(ArrayList<String> items)
    {
        this.items = items;
        //imageneDataset = imagene;
@@ -67,22 +68,22 @@ public class AdapterEstudiantes extends RecyclerView.Adapter<ViewHolderEstudiant
         tambien se especifica la informacion que le corresponde a cada
         vista
      */
+    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull ViewHolderEstudiantes holder, final int i)
+    public void onBindViewHolder(@NonNull final ViewHolderEstudiantes holder, final int i)
     {
-        //holder.imagenEstudiante.setImageResource(imageneDataset[position]);
-        holder.imagenEstudiante.setImageResource(items.get(i).getImagen());
-        holder.textEstudiantes.setText(items.get(i).getNombre());
-         holder.imagenEstudiante.setOnClickListener(new View.OnClickListener() {
+
+        //holder.textEstudiantes.setText(items.get(i).getNombre() + items.get(i).getApellido());
+         holder.textEstudiantes.setText(items.get(i));
+         holder.iconoMoreDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                positionSend = i; //Se obtiene el indice de la lista seleccionado por el usuarip
+               positionSend = i; //Se obtiene el indice de la lista seleccionado por el usuario
+                nombreSend = items.get(i);
                 onItemClick.onItemClick(i);
             }
         });
-
-
     }
     /*
         Metodo para ser utilizada cuando el usuario de un click o seleccione

@@ -22,4 +22,12 @@
     <string name="temaLight">Light</string>
     <string name="textAceptar">Aceptar</string>
     <string name="textCancelar">Cancelar</string>
+    <!--Registro usuarios-->
+    <string name="textTituloRegistro">Registro Usuarios</string>
+    <string name="textNombreUsuario">Primer nombre</string>
+    <string name="textApellidoUsuario">Primer apellido</string>
+    <string name="textNombreCompleto">Nombre Completo</string>
+    <string name="textEditar">Editar</string>
+    <string name="textGuardar">Guardar</string>
+    <string name="textEliminar">Eliminar</string>
 </resources>

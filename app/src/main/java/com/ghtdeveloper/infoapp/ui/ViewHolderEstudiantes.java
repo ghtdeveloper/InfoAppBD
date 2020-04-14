@@ -1,6 +1,7 @@
 package com.ghtdeveloper.infoapp.ui;
 
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -16,7 +17,7 @@ import com.ghtdeveloper.infoapp.R;
 public class ViewHolderEstudiantes extends RecyclerView.ViewHolder
 {
     //Vistas
-    public ImageView imagenEstudiante;
+    public ImageButton iconoMoreDetails;
     public TextView textEstudiantes;
 
     /*
@@ -26,7 +27,7 @@ public class ViewHolderEstudiantes extends RecyclerView.ViewHolder
     public ViewHolderEstudiantes(@NonNull View v)
     {
         super(v);
-        imagenEstudiante = v.findViewById(R.id.imgPerfilEstudiante);
+        iconoMoreDetails = v.findViewById(R.id.btnMoreDetails);
         textEstudiantes = v.findViewById(R.id.nombreEstudiante);
     }
 

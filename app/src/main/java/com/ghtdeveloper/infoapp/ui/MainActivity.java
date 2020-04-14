@@ -1,18 +1,27 @@
 package com.ghtdeveloper.infoapp.ui;
 
-import android.app.ActivityOptions;
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.transition.Fade;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ghtdeveloper.infoapp.R;
 import com.ghtdeveloper.infoapp.adapter.AdapterEstudiantes;
 import com.ghtdeveloper.infoapp.modelo.Estudiante;
+import com.ghtdeveloper.infoapp.modelo.OpenHelper;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 /**
     Clase principal en donde el usuario
@@ -30,106 +39,53 @@ public class MainActivity extends AppCompatActivity implements
     //Vistas
     RecyclerView recyclerView;
 
-    //Lista con las informaciones de los estudiantes
-    List<Estudiante> items;
+    ArrayList<String> listaDatosBD;
+
+    private SQLiteDatabase db;
+
+    //Objeto Estudiante
+    private Estudiante objEstudiante;
+
+    //Adapter
+    AdapterEstudiantes adapterEstudiantes;
+
+    //Vistas
+    TextInputEditText txtNombreCompleto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Se inicializa  la lista
-        items = new ArrayList<>();
-        //Se agregan los elementos a la lista de los estudiantes
-        items.add(new Estudiante(
-                R.drawable.img_edison_2,"Edison Martinez",
-                "San Cristobal","100265074","The Walking Dead es una serie" +
-                " de televisión estadounidense de horror post-apocalíptico para AMC basada" +
-                " en la serie de cómics de Robert Kirkman, Tony Moore y Charlie Adlard. " +
-                "La serie presenta un gran elenco como sobrevivientes de un apocalipsis zombi," +
-                " tratando de mantenerse con vida bajo la amenaza casi constante de ataques " +
-                "de los zombis sin conciencia, coloquialmente conocidos como «caminantes». " +
-                "Sin embargo, con la caída de la humanidad, estos sobrevivientes también " +
-                "enfrentan conflictos con otros sobrevivientes que han formado grupos " +
-                "y comunidades con sus propios conjuntos de leyes y morales, lo que a " +
-                "menudo conduce a conflictos hostiles entre las comunidades humanas." +
-                " Andrew Lincoln interpretó al personaje principal de la serie, " +
-                "Rick Grimes, hasta su partida durante la novena temporada. Otros " +
-                "miembros del elenco de larga data han incluido a Norman Reedus, " +
-                "Steven Yeun, Chandler Riggs, Melissa McBride, Lauren Cohan," +
-                "Danai Gurira, Josh McDermitt y Christian Serratos.La serie se emite" +
-                " exclusivamente en AMC en los Estados Unidos e internacionalmente a " +
-                "través de Fox Networks Group. La serie se estrenó el 31 de octubre de 2010. " +
-                "La décima temporada se estrenó el 6 de octubre de 2019 y se ha renovado " +
-                "por undécima temporada. AMC declaró su intención de continuar desarrollando " +
-                "más la serie y los medios relacionados. Una serie derivada, " +
-                "Fear the Walking Dead," +
-                " se estrenó el 23 de agosto de 2015 y se renovó por su sexta temporada. " +
-                "La segunda serie derivada, The Walking Dead: World Beyond, se estrenará en " +
-                "2020. AMC ha anunciado planes para que tres películas sigan la historia de " +
-                "Rick después de la partida de Lincoln."));
-        items.add(new Estudiante(R.drawable.darwin_img,"Darvin Villavicencio",
-                "Higüey ","100338494","Iron Man (también conocido en español " +
-                "como El Hombre de Hierro) es un superhéroe ficticio que aparece en los " +
-                "cómics estadounidenses publicados por Marvel Comics. El personaje fue" +
-                " cocreado por el escritor y editor Stan Lee, desarrollado por el " +
-                "guionista Larry Lieber y diseñado por los artistas Don Heck y Jack Kirby. " +
-                "Hizo su primera aparición en Tales of Suspense # 39 (marzo de 1963), " +
-                "y recibió su propio título en Iron Man #1 (mayo de 1968).Anthony Edward " +
-                "Stark, más conocido como Tony Stark, un multimillonario magnate empresarial " +
-                "estadounidense, playboy e ingenioso científico, sufre una grave lesión en el" +
-                " pecho durante un secuestro. Cuando sus captores intentan forzarlo a construir " +
-                "un arma de destrucción masiva crea, en cambio, una armadura poderosa " +
-                "para salvar " +
-                "su vida y escapar del cautiverio. Más tarde, Stark desarrolla su traje, " +
-                "agregando " +
-                "armas y otros dispositivos tecnológicos que diseñó a través de su compañía, " +
-                "Industrias Stark. Él usa el traje y las versiones sucesivas para proteger " +
-                "al mundo como Iron Man. Aunque al principio ocultó su verdadera identidad, " +
-                "Stark finalmente declaró que era, de hecho, Iron Man en un anuncio público." +
-                "Inicialmente, Iron Man no era más que un concepto de Stan Lee con el fin de" +
-                " explorar los temas de la Guerra Fría, particularmente el papel de la" +
-                " tecnología " +
-                "y la industria estadounidenses en la lucha contra el comunismo.2 Las re" +
-                " imaginaciones posteriores de Iron Man han pasado de los motivos de la " +
-                "Guerra Fría a" +
-                " los asuntos contemporáneos de la época,2 como lo es el terrorismo, la" +
-                " corrupción y la delincuencia en general."));
-        items.add(new Estudiante(R.drawable.jesus_img,"Jesus Trinidad",
-                "Santo Domingo","GG3487","Superman (cuyo nombre kryptoniano " +
-                "es Kal-El y su nombre terrestre es Clark Kent) es un personaje ficticio, " +
-                "un superhéroe de los cómics que aparece en las publicaciones " +
-                "de DC Comics.1234Creado por el escritor estadounidense Jerry Siegel y " +
-                "el artista canadiense Joe Shuster en 1933 cuando ambos se encontraban " +
-                "viviendo en Cleveland, Ohio; lo vendieron a Detective Comics, Inc. " +
-                "en 1938 por 130  dólares estadounidenses5 y la primera aventura del " +
-                "personaje fue publicada en Action Comics #1 (junio de 1938), " +
-                "para luego aparecer en varios seriales de radio, programas " +
-                "de televisión, películas, tiras periódicas y videojuegos. " +
-                "Con el éxito de sus aventuras, Superman ayudó a crear el " +
-                "género del superhéroe y estableció su primacía dentro del " +
-                "cómic estadounidense.1 La apariencia del personaje es distintiva " +
-                "e icónica: un traje azul y rojo, con una capa y un escudo de “S” " +
-                "estilizado en su pecho,678escudo que se ha convertido en un símbolo " +
-                "del personaje en todo tipo de medios de comunicación.9La historia " +
-                "original de Superman relata que nació con el nombre de Kal-El en el " +
-                "planeta Krypton; su padre, el científico Jor-El, y su madre Lara Lor-Van, " +
-                "lo enviaron en una nave espacial con destino a la Tierra cuando era un " +
-                "niño, momentos antes de la destrucción de su planeta. Fue descubierto y " +
-                "adoptado por Jonathan Kent y Martha Kent, una pareja de granjeros de" +
-                " Smallville, Kansas, que lo criaron con el nombre de Clark Kent y le " +
-                "inculcaron un estricto código moral. El joven Kent comenzó a mostrar " +
-                "habilidades superhumanas, las mismas que al llegar a su madurez" +
-                " decidiría usar para el beneficio de la humanidad."));
+
+        //Base de datos
+         OpenHelper dbHelper = new OpenHelper(this);
+         db = dbHelper.getWritableDatabase();
+         db = dbHelper.getReadableDatabase();
+         //ArrayList
+        listaDatosBD = new ArrayList<>();
+         //Modelo
+        objEstudiante = new Estudiante();
         //Cast a la vistas
         recyclerView = findViewById(R.id.recyclerview);
+        FloatingActionButton floatButtonAddUsuario = findViewById(R.id.btnAddUsuario);
         //Se inicializa el adaptador se pasa como parametro la lista
-        AdapterEstudiantes adapterEstudiantes = new AdapterEstudiantes(items);
+        getListaEstudiantes(); //Listado estudiantes
+        adapterEstudiantes = new AdapterEstudiantes(listaDatosBD);
         //Se asigna el adaptador a la lista
         recyclerView.setAdapter(adapterEstudiantes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //recyclerView.setOnClickListener(on);
         //Se asigna el metodo setOnClick  para poder redireccionar a la interfaz del detalle
         adapterEstudiantes.setOnClick(this);
+        //Listener button agregar usuario
+        floatButtonAddUsuario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Se invocoara el dialogo
+                dialogoRegistrarUsuario();
+            }
+        });
 
     }//Fin del metodo onCreate
 
@@ -154,38 +110,185 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onItemClick(int position)
     {
-        //Animacion para la entrada a la actividad
-        Fade fade = new Fade();
-        fade.setDuration(200);
-        getWindow().setEnterTransition(fade);
-        intentMainActivity = new Intent(this, DetailActivity.class);
-        /*
-            Se procede a enviar los datos a la siguiente actividad
-         */
-        //Se envia el nombre
-        intentMainActivity.putExtra("nombreEstudiante",
-                items.get(AdapterEstudiantes.positionSend).getNombre());
+        getInformacionUsuarios();
+        intentMainActivity = new Intent(this,DetailActivity.class);
+        //Se pasan por medios de intents las informaciones obtenidas en la base de datos
 
-        //Se envia la ciudad
-        intentMainActivity.putExtra("ciudadEstudiante",
-                items.get(AdapterEstudiantes.positionSend).getCiudadNacimiento());
+        //Nombre
+        intentMainActivity.putExtra("nombreEsudiante",objEstudiante.getNombreCompleto());
 
-        //Se envia la Matricula
-        intentMainActivity.putExtra("matriculaEstudiante",
-                items.get(AdapterEstudiantes.positionSend).getMatricula());
+        //Ciudad Nacimiento
+        intentMainActivity.putExtra("lugarNacimiento",objEstudiante.getCiudadNacimiento());
 
-        //Se envia la descripcion
-        intentMainActivity.putExtra("direccionEstudiante",
-                items.get(AdapterEstudiantes.positionSend).getDescripcion());
+        //Matricula
+        intentMainActivity.putExtra("matricula",objEstudiante.getMatricula());
 
-        //Imagen
-        intentMainActivity.putExtra("imagenEstudiante",
-                items.get(AdapterEstudiantes.positionSend).getImagen());
+        //Descripcion
 
-        startActivity(intentMainActivity,
-                ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        intentMainActivity.putExtra("descripcion",objEstudiante.getDescripcion());
+
+        //ID estudiante para modifcacion y eliminacion
+        intentMainActivity.putExtra("idEstudiante",String.valueOf(getIDEstudiante()));
+
+        startActivity(intentMainActivity);
+
 
     }//Fin del metodo onItemClick
+
+    /*
+        Dialogo para registrar los usuarios solo se utilizara
+        el primer nombre y primer apellido para un registro
+        rapido
+     */
+    public void dialogoRegistrarUsuario()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        @SuppressLint("InflateParams") View viewDialog = inflater.inflate
+                (R.layout.dialog_usuarios_fast, null);
+        builder.setView(viewDialog);
+        //Cast a la vistas
+        txtNombreCompleto = viewDialog.findViewById(R.id.txtNombreUsuario);
+        builder.setTitle("Registro Estudiantes");
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                if(validarCamposVacios() > 0)
+                {
+                    Toast.makeText(getApplicationContext(), "No puede dejar campos vacios",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                else
+                {
+                    objEstudiante.setNombreCompleto(Objects.requireNonNull
+                            (txtNombreCompleto.getText()).toString().trim());
+                    if(db!= null)
+                    {
+                        ContentValues cv = new ContentValues();
+                        cv.put("nombreCompleto", objEstudiante.getNombreCompleto());
+                        cv.put("matricula","N/A");
+                        cv.put("descripcion","N/A");
+                        cv.put("lugarNacimiento","N/A");
+                        db.insertOrThrow("Estudiantes",null,cv);
+                        Toast.makeText(getApplicationContext(),
+                                "Estudiante Agregado de forma exitosa",
+                                Toast.LENGTH_SHORT).show();
+                        //Realizo un refresh a la actividad principal
+                        intentMainActivity = new Intent(getApplicationContext(),MainActivity.class);
+                        startActivity(intentMainActivity);
+                    }
+                }//Fin del else
+
+            }//Fin del metodo onClick
+        });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.getLayoutInflater();
+        dialog.show();
+    }//Fin del metodo dialogoRegistrarUsuario
+
+
+    /*
+        Metodo definido para retornar el listado
+        de todos los estudiantes registrados en la app
+
+     */
+
+    private void getListaEstudiantes()
+    {
+        //listDatos.clear();
+           Cursor cursor = db.rawQuery("select es.nombreCompleto from Estudiantes as es"
+                   , null);
+           if (cursor.moveToFirst())
+           {
+               do {
+
+                  listaDatosBD.add(cursor.getString(0));
+               } while (cursor.moveToNext());
+           }
+           cursor.close();
+    }//Fin del metodo listadoEstudiante
+
+    /*
+        Metodo definido para verificar
+        si hay campos vacios al momento
+        de intentar registrar un estudiante
+     */
+    public int validarCamposVacios()
+    {
+        int contador = 0;
+        if(Objects.requireNonNull(txtNombreCompleto.getText()).toString().isEmpty())
+        {
+            contador = contador + 1;
+        }
+        return  contador;
+    }//Fin del metodo validarCamposVacios
+
+
+    /*
+        Metodo definido para obtener el id del estudiante
+     */
+    public int getIDEstudiante()
+    {
+        String filtro = String.valueOf(AdapterEstudiantes.nombreSend);
+
+        //Campos que me interesa obtener
+        String[] campos = new String[] {"idEstudiante"};
+        //Filtro por el cual voy a buscar
+        String[] arg = new String[] {filtro};
+        //Query
+        Cursor fila = db.query("Estudiantes",campos,"nombreCompleto=?",
+                arg,null,null,null);
+
+        if(fila.moveToFirst())
+        {
+            do {
+                objEstudiante.setIdEstudiante(Integer.parseInt(fila.getString(0)));
+            }while (fila.moveToNext());
+        }
+        fila.close();
+        return  objEstudiante.getIdEstudiante();
+    }//Fin del metodo getIDEstudiante
+
+
+    /*
+        Metodo definido para obtener las informaciones
+        de los usuarios para ser enviadas
+        a la actividad del detalle
+
+     */
+    public void getInformacionUsuarios()
+    {
+        String filtro = String.valueOf(getIDEstudiante());
+        //Campos que me interesan obtener
+        String[] campos = new String[] {"nombreCompleto","matricula","descripcion",
+                "lugarNacimiento"};
+        //Filtro a aplicar
+        String[] arg = new String[] {filtro};
+        //Query
+        Cursor fila = db.query("Estudiantes",campos,"idEstudiante=?",
+                arg,null,null,null);
+        if(fila.moveToFirst())
+        {
+            do {
+                objEstudiante.setNombreCompleto(fila.getString(0));//Nombre completo
+                objEstudiante.setMatricula(fila.getString(1));//Matricula
+                objEstudiante.setDescripcion(fila.getString(2));//Descripcion
+                objEstudiante.setCiudadNacimiento(fila.getString(3));//Lugar nacimiento
+            }while (fila.moveToNext());
+        }
+        fila.close();
+    }//Fin del metodo getInformacionUsuarios
+
+
 
 
 }//Fin de la class MainActivity

@@ -9,34 +9,25 @@ public class Estudiante
 {
 
     //Variables
-    private int imagen;
-    private  String nombre;
-
+    private int idEstudiante;
+    private  String nombreCompleto;
     private  String ciudadNacimiento;
     private  String matricula;
     private  String descripcion;
 
-
-    //Se define el constructor de la class con parametros
-    public Estudiante(int imagen, String nb,String ciudadN, String matr, String descc)
+    //Constructor de la class
+    public Estudiante()
     {
-        this.imagen = imagen;
-        this.nombre = nb;
-        this.ciudadNacimiento = ciudadN;
-        this.matricula = matr;
-        this.descripcion = descc;
-
-    }//Fin del constructor
-
+    }
 
     //Getters and Setters
 
-    public String getNombre() {
-        return nombre;
+    public String getNombreCompleto() {
+        return nombreCompleto;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
     }
 
     public String getCiudadNacimiento() {
@@ -63,12 +54,13 @@ public class Estudiante
         this.descripcion = descripcion;
     }
 
-    public int getImagen() {
-        return imagen;
+
+    public int getIdEstudiante() {
+        return idEstudiante;
     }
 
-    public void setImagen(int imagen) {
-        this.imagen = imagen;
+    public void setIdEstudiante(int idEstudiante) {
+        this.idEstudiante = idEstudiante;
     }
 
 }//Fin de la class Estudiante
