@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">InfoApp</string>
+    <string name="app_name">InfoAppDB</string>
     <string name="listEstudiantes">Lista Estudiantes</string>
     <string name="contentDesc">Imagen</string>
     <string name="nombreEstudiante">Estudiante</string>
