@@ -21,7 +21,7 @@ public class OpenHelper extends SQLiteOpenHelper
 
     private static final String ESTUDIANTE_TABLE_CREATE = "CREATE TABLE Estudiantes" +
             "(idEstudiante INTEGER PRIMARY KEY AUTOINCREMENT,nombreCompleto TEXT," +
-            "matricula TEXT" + ",descripcion TEXT,lugarNacimiento TEXT)";
+            "matricula TEXT" + ",descripcion TEXT,lugarNacimiento TEXT,imagen BLOB)";
 
     public OpenHelper(Context context)
     {

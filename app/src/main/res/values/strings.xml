@@ -30,4 +30,7 @@
     <string name="textEditar">Editar</string>
     <string name="textGuardar">Guardar</string>
     <string name="textEliminar">Eliminar</string>
+    <!--Menu imagenes-->
+    <string name="menuTomarFoto">Cámara</string>
+    <string name="menuGaleria">Galería </string>
 </resources>

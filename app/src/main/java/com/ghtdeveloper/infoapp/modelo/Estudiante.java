@@ -14,6 +14,7 @@ public class Estudiante
     private  String ciudadNacimiento;
     private  String matricula;
     private  String descripcion;
+    private byte[] imagen;
 
     //Constructor de la class
     public Estudiante()
@@ -62,6 +63,11 @@ public class Estudiante
     public void setIdEstudiante(int idEstudiante) {
         this.idEstudiante = idEstudiante;
     }
+
+    public byte[] getImagen() { return imagen; }
+
+    public void setImagen(byte[] imagen) { this.imagen = imagen; }
+
 
 }//Fin de la class Estudiante
 

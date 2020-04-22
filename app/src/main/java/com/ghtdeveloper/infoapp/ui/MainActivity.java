@@ -4,8 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +23,8 @@ import com.ghtdeveloper.infoapp.modelo.Estudiante;
 import com.ghtdeveloper.infoapp.modelo.OpenHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -127,12 +132,11 @@ public class MainActivity extends AppCompatActivity implements
 
         intentMainActivity.putExtra("descripcion",objEstudiante.getDescripcion());
 
+
         //ID estudiante para modifcacion y eliminacion
         intentMainActivity.putExtra("idEstudiante",String.valueOf(getIDEstudiante()));
 
         startActivity(intentMainActivity);
-
-
     }//Fin del metodo onItemClick
 
     /*
@@ -171,6 +175,8 @@ public class MainActivity extends AppCompatActivity implements
                         cv.put("matricula","N/A");
                         cv.put("descripcion","N/A");
                         cv.put("lugarNacimiento","N/A");
+                        cv.put("imagen",getImagenXDefecto());
+
                         db.insertOrThrow("Estudiantes",null,cv);
                         Toast.makeText(getApplicationContext(),
                                 "Estudiante Agregado de forma exitosa",
@@ -270,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements
         String filtro = String.valueOf(getIDEstudiante());
         //Campos que me interesan obtener
         String[] campos = new String[] {"nombreCompleto","matricula","descripcion",
-                "lugarNacimiento"};
+                "lugarNacimiento","imagen"};
         //Filtro a aplicar
         String[] arg = new String[] {filtro};
         //Query
@@ -286,9 +292,28 @@ public class MainActivity extends AppCompatActivity implements
             }while (fila.moveToNext());
         }
         fila.close();
+
     }//Fin del metodo getInformacionUsuarios
 
 
-
+    /*
+        Metodo definido para agregar una imagen
+        a la base de datos cuando el usuario se registra
+        por primera vez
+     */
+    public byte[] getImagenXDefecto()
+    {
+        Resources res = getApplicationContext().getResources();
+        int id = R.drawable.img_perfil_unknow;
+        Bitmap bitmap2 = BitmapFactory.decodeResource(res,id);
+        //Bitmap bitmap = BitmapFactory.decodeFile("drawable/img_perfil_unknow.png");
+        if(bitmap2 != null)
+        {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap2.compress(Bitmap.CompressFormat.JPEG,90,stream);
+            return  stream.toByteArray();
+        }
+        return  null;
+    }//Fin del metodo getImagenXDefecto
 
 }//Fin de la class MainActivity
