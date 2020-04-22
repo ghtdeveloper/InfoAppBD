@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,6 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.util.Objects;
 
 /**
@@ -65,7 +67,8 @@ public class DetailActivity extends AppCompatActivity implements  PopupMenu.OnMe
     private int idUsuario;
 
     //Camara
-    static  final  int request_IMAGE_CAPTURE = 1;
+    static  final  int REQUEST_IMAGE_CAPTURE = 1;
+    static  final int REQUEST_IMAGE_GALERIA= 0;
     //String rutaPhoto;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -154,6 +157,10 @@ public class DetailActivity extends AppCompatActivity implements  PopupMenu.OnMe
     }
 
 
+    /*
+        Normal los metodos para manejar los temas
+        del App
+     */
     public void asignarTema()
     {
         //Usuarios preferencias
@@ -175,6 +182,13 @@ public class DetailActivity extends AppCompatActivity implements  PopupMenu.OnMe
        if(tema.equals("no asignado")) { setTheme(R.style.ThemeDefault); }
     }//Fin de la funcion asignar tema
 
+    /*
+        Se maneja el estatus de la vistas
+        de los campos si el usaurio pulsa la
+        opcion de editar se habilitan los
+        controles por defecto no se
+        pueden editar
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void asignarEstatusCampos(Boolean flag)
     {
@@ -244,6 +258,9 @@ public class DetailActivity extends AppCompatActivity implements  PopupMenu.OnMe
         }
     }//fin de asignarEstatusCampos
 
+    /*
+        Muestra la pantalla principal de la App
+     */
     public void  showPantallPrincipal()
     {
         intActivityDetail = new Intent(this, MainActivity.class);
@@ -385,6 +402,7 @@ public class DetailActivity extends AppCompatActivity implements  PopupMenu.OnMe
              return  true;
 
          case R.id.menuGaleria:
+             intentAccesGalery();
              return  true;
 
              default:
@@ -392,24 +410,42 @@ public class DetailActivity extends AppCompatActivity implements  PopupMenu.OnMe
      }
     }//Fin del metodo onMenuItemClick
 
-    //Camera Acces
-
+    //Acceso a la camara del dispositivo para tomar fotos
     private void tomarImagenIntent()
     {
         Intent intentPicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(intentPicture.resolveActivity(getPackageManager())!= null)
         {
-                startActivityForResult(intentPicture,request_IMAGE_CAPTURE);
+                startActivityForResult(intentPicture, REQUEST_IMAGE_CAPTURE);
         }
     }//Fin del metodo tomarImagenIntent
 
 
+    /*
+        Metodo definido para acceder a la galeria del
+        dispositivo
+     */
+    public void intentAccesGalery()
+    {
+        Intent intentGaleria = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intentGaleria,REQUEST_IMAGE_GALERIA);
+
+    }
+
+    /*
+        metodo definido para controlar el intent
+        de si el usuario va a utilizar la camara para capturar fotos
+        o si va acceder a los recursos de la galeria del dispositivo
+     */
     @Override
     protected  void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == request_IMAGE_CAPTURE && resultCode == RESULT_OK)
+        String valorObtenido =  String.valueOf(idUsuario);
+        String[] arg = new String[] {valorObtenido};
+        if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
         {
              Bundle extras = data.getExtras();
              assert extras != null;
@@ -422,9 +458,7 @@ public class DetailActivity extends AppCompatActivity implements  PopupMenu.OnMe
             assert imageBitmap != null;
             imageBitmap.compress(Bitmap.CompressFormat.JPEG,90,stream);
 
-            //Filtro
-            String valorObtenido =  String.valueOf(idUsuario);
-            String[] arg = new String[] {valorObtenido};
+            //Se inserta en la BD
              if(db != null)
              {
                  ContentValues values = new ContentValues();
@@ -433,6 +467,32 @@ public class DetailActivity extends AppCompatActivity implements  PopupMenu.OnMe
                          arg);
              }
         }//Fin if Mian
+
+        if(requestCode ==REQUEST_IMAGE_GALERIA && resultCode == RESULT_OK)
+        {
+            Uri recursoUri = data.getData();
+            Bitmap bitmapGaleria;
+            try {
+                assert recursoUri != null;
+                bitmapGaleria = BitmapFactory.decodeStream(getContentResolver()
+                        .openInputStream(recursoUri));
+                imgProfileEstudiante.setImageBitmap(bitmapGaleria);
+                //Nueva vez se comprime para ser insertada en la BD
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                assert bitmapGaleria != null;
+                bitmapGaleria.compress(Bitmap.CompressFormat.JPEG,90,stream);
+                //Se agrega a la BD
+                if(db != null)
+                {
+                    ContentValues values = new ContentValues();
+                    values.put("imagen", stream.toByteArray());
+                    db.update("Estudiantes",values,"idEstudiante=?",
+                            arg);
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }//Fin del metodo onActivityResult
 
     /*
@@ -462,5 +522,5 @@ public class DetailActivity extends AppCompatActivity implements  PopupMenu.OnMe
             }while (fila.moveToNext());
         }
         fila.close();
-    }
+    }//Fin del metodo getImagenProfile
 }//Fin de la class
